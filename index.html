@@ -1,75 +1,150 @@
 <!DOCTYPE html>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("bobaForm");
+        const main = document.querySelector("main");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const base = document.getElementById("base").value;
+            const toppings = Array.from(document.querySelectorAll('input[name="toppings"]:checked')).map(input => input.value);
+            const sugar = document.querySelector('input[name="sugar"]:checked')?.value || "noSugar";
+            const ice = document.querySelector('input[name="ice"]:checked')?.value || "noIce";
+
+            const drinkImage = document.createElement("div");
+            drinkImage.style.width = "200px";
+            drinkImage.style.height = "300px";
+            drinkImage.style.border = "2px solid #5c4033";
+            drinkImage.style.borderRadius = "10px";
+            drinkImage.style.margin = "1rem auto";
+            drinkImage.style.position = "relative";
+            drinkImage.style.backgroundColor = base === "milkTea" ? "#d4a373" :
+                                               base === "greenTea" ? "#a8d5ba" :
+                                               base === "blackTea" ? "#5c4033" : "#f7c6c7";
+
+            toppings.forEach((topping, index) => {
+                const toppingElement = document.createElement("div");
+                toppingElement.style.width = "30px";
+                toppingElement.style.height = "30px";
+                toppingElement.style.borderRadius = "50%";
+                toppingElement.style.position = "absolute";
+                toppingElement.style.bottom = `${10 + index * 35}px`;
+                toppingElement.style.left = `${Math.random() * 140 + 30}px`;
+                toppingElement.style.backgroundColor = topping === "boba" ? "#5c4033" :
+                                                        topping === "jelly" ? "#ffcccb" :
+                                                        topping === "pudding" ? "#f7e7a9" : "#a52a2a";
+                drinkImage.appendChild(toppingElement);
+            });
+
+            const resultSection = document.createElement("div");
+            resultSection.innerHTML = `
+                <h2>Your Custom Boba Drink</h2>
+                <p><strong>Base:</strong> ${base}</p>
+                <p><strong>Toppings:</strong> ${toppings.join(", ") || "None"}</p>
+                <p><strong>Sugar Level:</strong> ${sugar}</p>
+                <p><strong>Ice Level:</strong> ${ice}</p>
+            `;
+            resultSection.style.textAlign = "center";
+
+            main.innerHTML = "";
+            main.appendChild(resultSection);
+            main.appendChild(drinkImage);
+        });
+    });
+</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boba Drop</title>
+    <title>Build Your Own Boba Drink</title>
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #ebe29c;
-            color: #fff;
-            text-align: center;
+            background-color: #fdf6e3; /* Light beige for boba tea theme */
+            color: #5c4033; /* Brown for text */
+            margin: 0;
+            padding: 0;
         }
         header {
-            background-color: #f8f1b4;
-            padding: 20px;
+            background-color: #d4a373; /* Milk tea color */
+            color: white;
+            text-align: center;
+            padding: 1rem;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5em;
-            color: #ffcc00;
+        main {
+            padding: 2rem;
         }
-        .boba-container {
-            margin: 50px auto;
-            max-width: 800px;
+        .form-section {
+            margin-bottom: 1.5rem;
         }
-        .boba-item {
-            background-color: #edefa2;
-            border: 2px solid #ffcc00;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
         }
-        .boba-item h2 {
-            margin: 0;
-            color: #ffcc00;
+        select, input[type="radio"] {
+            margin-bottom: 1rem;
         }
-        .boba-item p {
-            margin: 10px 0 0;
+        .submit-btn {
+            background-color: #5c4033; /* Dark brown */
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #3e2a1f; /* Darker brown */
         }
         footer {
-            margin-top: 50px;
-            padding: 20px;
-            background-color: #f0ee9c;
-        }
-        footer p {
-            margin: 0;
-            font-size: 0.9em;
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #d4a373;
+            color: white;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Boba Drop</h1>
+        <h1>Build Your Own Boba Drink</h1>
     </header>
-    <div class="boba-container">
-        <div class="boba-item">
-            <h2>Classic Milk Tea</h2>
-            <p>A perfect blend of tea, milk, and tapioca pearls.</p>
-        </div>
-        <div class="boba-item">
-            <h2>Taro Milk Tea</h2>
-            <p>Sweet and creamy with a hint of taro flavor.</p>
-        </div>
-        <div class="boba-item">
-            <h2>Matcha Latte</h2>
-            <p>Rich matcha flavor with chewy boba pearls.</p>
-        </div>
-    </div>
+    <main>
+        <form id="bobaForm">
+            <div class="form-section">
+                <label for="base">Choose your base:</label>
+                <select id="base" name="base">
+                    <option value="milkTea">Milk Tea</option>
+                    <option value="greenTea">Green Tea</option>
+                    <option value="blackTea">Black Tea</option>
+                    <option value="fruitTea">Fruit Tea</option>
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="toppings">Choose your toppings:</label>
+                <input type="checkbox" id="boba" name="toppings" value="boba"> Boba<br>
+                <input type="checkbox" id="jelly" name="toppings" value="jelly"> Jelly<br>
+                <input type="checkbox" id="pudding" name="toppings" value="pudding"> Pudding<br>
+                <input type="checkbox" id="redBean" name="toppings" value="redBean"> Red Bean<br>
+            </div>
+            <div class="form-section">
+                <label>Sugar level:</label>
+                <input type="radio" id="noSugar" name="sugar" value="noSugar"> No Sugar<br>
+                <input type="radio" id="halfSugar" name="sugar" value="halfSugar"> Half Sugar<br>
+                <input type="radio" id="fullSugar" name="sugar" value="fullSugar"> Full Sugar<br>
+            </div>
+            <div class="form-section">
+                <label>Ice level:</label>
+                <input type="radio" id="noIce" name="ice" value="noIce"> No Ice<br>
+                <input type="radio" id="lessIce" name="ice" value="lessIce"> Less Ice<br>
+                <input type="radio" id="regularIce" name="ice" value="regularIce"> Regular Ice<br>
+            </div>
+            <button type="submit" class="submit-btn">Create My Drink</button>
+        </form>
+    </main>
     <footer>
-        <p>&copy; 2023 Boba Drop. All rights reserved.</p>
+        <p>Enjoy your custom boba drink!</p>
     </footer>
 </body>
 </html>
